@@ -122,21 +122,6 @@ public class SongList extends Fragment {
             cursor.close(); }
     }
 
-    private Bitmap getBitmap(Uri uri, Context context){
-        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-        byte[] rawArt;
-        Bitmap art = null;
-        BitmapFactory.Options bfo=new BitmapFactory.Options();
-
-        mmr.setDataSource(context, uri);
-        rawArt = mmr.getEmbeddedPicture();
-        if (null != rawArt)
-        {
-            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
-        }
-        return art;
-    }
-
     @Override
     public void onPause() {
         super.onPause();

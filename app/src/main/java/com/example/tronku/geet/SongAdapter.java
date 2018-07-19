@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -24,7 +26,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     private Context context;
     private List<Songs> songsList;
-    private List<Songs> list;
+    private List<Bitmap> bitmapList = new ArrayList<>();
 
     public SongAdapter(Context context, List<Songs> list) {
         this.context = context;
@@ -34,6 +36,31 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public void update(List<Songs> list){
         songsList = list;
         notifyDataSetChanged();
+        setImages();
+    }
+
+    private void setImages() {
+        for(int i=0;i<songsList.size();i++){
+            bitmapList.add(getBitmap(Uri.parse(songsList.get(i).getPath())));
+        }
+    }
+
+    private Bitmap getBitmap(Uri uri){
+        MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        byte[] rawArt;
+        Bitmap art;
+        BitmapFactory.Options bfo=new BitmapFactory.Options();
+
+        mmr.setDataSource(context, uri);
+        rawArt = mmr.getEmbeddedPicture();
+        if (null != rawArt)
+        {
+            art = BitmapFactory.decodeByteArray(rawArt, 0, rawArt.length, bfo);
+        }
+        else{
+            art = BitmapFactory.decodeResource(context.getResources(), R.drawable.music);
+        }
+        return art;
     }
 
     @NonNull
@@ -57,7 +84,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     public void onBindViewHolder(@NonNull SongViewHolder holder, int position) {
         holder.title.setText(songsList.get(position).getSongTitle());
         holder.artist.setText(songsList.get(position).getArtistName());
-
+        holder.thumbnail.setImageBitmap(bitmapList.get(position));
     }
 
     @Override

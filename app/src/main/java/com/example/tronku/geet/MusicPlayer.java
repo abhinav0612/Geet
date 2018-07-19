@@ -238,7 +238,6 @@ public class MusicPlayer extends AppCompatActivity implements MediaPlayer.OnComp
     public void playSong(int songPosition){
         try{
             mp.reset();
-            mp = null;
             mp.setDataSource(list.get(songPosition).getPath());
             updateUI(songPosition);
             mp.prepare();
@@ -294,9 +293,13 @@ public class MusicPlayer extends AppCompatActivity implements MediaPlayer.OnComp
         byte[] raw;
         mmr.setDataSource(getApplicationContext(), Uri.parse(path));
         raw = mmr.getEmbeddedPicture();
-        BitmapFactory.Options bfo = new BitmapFactory.Options();
-        Bitmap bitmap = BitmapFactory.decodeByteArray(raw, 0, raw.length, bfo);
-        if(bitmap!=null)
+        if(raw!=null){
+            BitmapFactory.Options bfo = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeByteArray(raw, 0, raw.length, bfo);
             banner.setImageBitmap(bitmap);
+        }
+        else{
+            banner.setImageResource(R.drawable.player_bg);
+        }
     }
 }
