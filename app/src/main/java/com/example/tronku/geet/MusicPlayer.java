@@ -237,6 +237,8 @@ public class MusicPlayer extends AppCompatActivity implements MediaPlayer.OnComp
 
     public void playSong(int songPosition){
         try{
+
+            mp = new MediaPlayer();
             mp.reset();
             mp.setDataSource(list.get(songPosition).getPath());
             updateUI(songPosition);
